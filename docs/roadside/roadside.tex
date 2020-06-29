@@ -54,7 +54,7 @@ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=tru
 \tableofcontents
 
 \footnote{The most recent version of this document can be downloaded from\\
-\url{https://github.com/aubreymoore/CRB-trap-improvement/blob/master/results.pdf}.}
+\url{https://github.com/aubreymoore/roadside/blob/master/docs/roadside.pdf}.}
 
 \pagebreak
 
@@ -68,9 +68,9 @@ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=tru
 
 Preliminary work show that mounting the smart phone externally produces much better results than mounting the phone internally as a dash cam. This eliminates problems cause by dirty windshields and internal reflections.  
 
-A smart phone can be mounted externally using a ball and socket anchored using a magnet (\ref{fig:mount}).
+A smart phone can be mounted externally using a ball and socket anchored using a strong magnet (\ref{fig:mount}).
 
-Optimal placement of the smart phone camera appears to be above the right-hand corner of the windshield (passenger side in the US) 
+Optimal placement of the smart phone camera appears to be above the right-hand corner of the windshield (passenger side in the US). 
 
 
 \begin{figure}[h]
@@ -98,7 +98,7 @@ Optimal angles for direction of view appear to be 45 degrees to the right of dir
 
 \subsubsection{Camera and Lens}
 
-We are currently using a Samsung Galaxy S10 Smart Phone.  This phone is equipped with a 16MP ultra-wide-angle camera for 123\textdegree{} field of view which seems to be a good  choice for this application.
+We are currently using a Samsung Galaxy S10 smart phone.  This phone is equipped with four cameras including a 16MP ultra-wide-angle camera (123\textdegree{} field of view) which seems to be a good  choice for this application.
 
 \subsubsection{Resolution}
 
@@ -110,9 +110,9 @@ Standard frame rate is 30 fps. Initial recordings were made using this rate, but
 
 \subsection{Using the Open Camera App}
 
-Open Camera (\url{https://opencamera.org.uk/}) is a FOSS app for Android smart phones which enables much better control of hardware features than the default Camera app provided with Samsung phones. 
+\textbf{Open Camera} (\url{https://opencamera.org.uk/}) is a FOSS app for Android smart phones which enables much better control of hardware features than the default Camera app provided with Samsung phones. 
 
-Open Camera offers a plethora of settings which can be saved in a configuration file for later use. 
+\textbf{Open Camera} offers a plethora of settings which can be saved in a configuration file for later use. 
 For screenshots of \textit{Video settings} see figures \ref{fig:videosettings1}, \ref{fig:videosettings2}, and \ref{fig:videosettings3}. 
 
 
@@ -137,11 +137,13 @@ For screenshots of \textit{Video settings} see figures \ref{fig:videosettings1},
 	\label{fig:videosettings3}
 \end{figure}
 
-\subsection{Georeferencing}
+\subsection{Using the GPSLogger App}
 
-Although Open Camera has an option to georeference video frames, this feature proved unreliable in preliminary tests. As an alternative, it was decided to use a free called GPSLogger which logs timestamped GPS coordinates to a file at a frequency of once per second.
+Although \textbf{Open Camera} has an option to georeference video frames, this feature proved unreliable in preliminary tests. As an alternative, it was decided to use a free called \textbf{GPSLogger} which logs timestamped GPS coordinates to a file at a frequency of once per second. \textbf{GPSLogger} runs continually in background on the phone during a series of video recordings.
 
-The author has cobbled together a jupyter notebook called georef which uses the GPSLogger log to calculate the GPS coordinates for each frame in a video recording. 
+\subsection{Georeferencing Video Frames}
+
+The author has cobbled together a \textbf{jupyter notebook} called \textbf{georef} which uses the \textbf{GPSLogger} log to calculate the GPS coordinates for frames video recordings based on timestamps (see )\url{https://github.com/aubreymoore/roadside/blob/master/jupyter%20notebooks/georef.ipynb}). 
 
 \printbibliography	
 
