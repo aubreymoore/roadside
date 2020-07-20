@@ -1,3 +1,5 @@
+# Usage ./doit.sh
+
 # exit when any command fails
 set -e
 
@@ -12,9 +14,9 @@ papermill --prepare-only get-random-bounding-boxes.ipynb $NOTEBOOK -y '{"NSAMPLE
 jupyter nbconvert --execute --to html $NOTEBOOK
 
 # Commit changes to GitHub
-# Use git config --global credential.helper store to avoid authentication
 
 cd ~/Desktop/roadside
+git config --global credential.helper store
 git add .
 git commit -m 'automated push'
 git push
