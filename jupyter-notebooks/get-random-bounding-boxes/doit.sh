@@ -11,3 +11,12 @@ NOTEBOOK="reports/job27.ipynb"
 papermill --prepare-only get-random-bounding-boxes.ipynb $NOTEBOOK -y '{"NSAMPLES":"10"}' 
 jupyter nbconvert --execute --to html $NOTEBOOK
 
+# Commit changes to GitHub
+# Use git config --global credential.helper store to avoid authentication
+
+cd ~/Desktop/roadside
+git add .
+git commit -m 'automated push'
+git push
+
+
