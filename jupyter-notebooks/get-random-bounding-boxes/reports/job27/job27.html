@@ -13178,6 +13178,8 @@ git push
 <span class="n">CVATXMLFILE</span> <span class="o">=</span> <span class="s1">&#39;DONT-ANNOTATE-06-25-2020-115358-5.xml&#39;</span>
 <span class="n">VIDEOFILE</span> <span class="o">=</span> <span class="s1">&#39;20200625_115358_processed.mp4&#39;</span>
 <span class="n">NSAMPLES</span> <span class="o">=</span> <span class="s1">&#39;5&#39;</span>
+<span class="n">REPORTURL</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/aubreymoore/roadside/blob/master/jupyter-notebooks/get-random-bounding-boxes/reports&#39;</span>
+<span class="n">REPORTDIR</span> <span class="o">=</span> <span class="s1">&#39;job27&#39;</span>
 </pre></div>
 
     </div>
@@ -13352,10 +13354,12 @@ git push
 <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
 <span class="c1"># Save image list as a CSV file</span>
+<span class="c1"># https://github.com/aubreymoore/roadside/blob/master/jupyter-notebooks/get-random-bounding-boxes/reports/job27/high-t0278-f0249.jpg</span>
 
 <span class="n">imagelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.jpg&#39;</span><span class="p">)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">imagelist</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">imagelist</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{REPORTURL}</span><span class="s1">/</span><span class="si">{REPORTDIR}</span><span class="s1">/</span><span class="si">{r.image}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;images.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
@@ -13484,53 +13488,53 @@ dtype: int64
         <div style="display: flex; flex-flow: row wrap; text-align: center;">
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0011-f0023.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0011-f0023.jpg</figcaption>
+              <img src="zero-t0039-f0042.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0039-f0042.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0091-f0132.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0091-f0132.jpg</figcaption>
+              <img src="zero-t0634-f0451.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0634-f0451.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0125-f0138.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0125-f0138.jpg</figcaption>
+              <img src="zero-t0120-f0137.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0120-f0137.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0128-f0138.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0128-f0138.jpg</figcaption>
+              <img src="zero-t0092-f0133.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0092-f0133.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0158-f0146.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0158-f0146.jpg</figcaption>
+              <img src="zero-t0584-f0416.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0584-f0416.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0512-f0401.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0512-f0401.jpg</figcaption>
+              <img src="zero-t0020-f0026.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0020-f0026.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0597-f0422.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0597-f0422.jpg</figcaption>
+              <img src="zero-t0438-f0389.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0438-f0389.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="zero-t0476-f0395.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0476-f0395.jpg</figcaption>
-            </figure>
-        
-            <figure style="margin: 5px !important;">
-              <img src="zero-t0559-f0409.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">zero-t0559-f0409.jpg</figcaption>
+              <img src="zero-t0450-f0391.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0450-f0391.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
               <img src="zero-t0103-f0134.jpg" style="height: auto">
               <figcaption style="font-size: 0.6em">zero-t0103-f0134.jpg</figcaption>
+            </figure>
+        
+            <figure style="margin: 5px !important;">
+              <img src="zero-t0431-f0388.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">zero-t0431-f0388.jpg</figcaption>
             </figure>
         
         </div>
@@ -13577,53 +13581,53 @@ dtype: int64
         <div style="display: flex; flex-flow: row wrap; text-align: center;">
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0375-f0376.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0375-f0376.jpg</figcaption>
+              <img src="light-t0334-f0285.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0334-f0285.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0184-f0153.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0184-f0153.jpg</figcaption>
+              <img src="light-t0229-f0168.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0229-f0168.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0040-f0042.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0040-f0042.jpg</figcaption>
+              <img src="light-t0529-f0404.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0529-f0404.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0648-f0483.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0648-f0483.jpg</figcaption>
+              <img src="light-t0616-f0430.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0616-f0430.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0540-f0405.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0540-f0405.jpg</figcaption>
+              <img src="light-t0378-f0377.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0378-f0377.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0057-f0104.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0057-f0104.jpg</figcaption>
+              <img src="light-t0462-f0393.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0462-f0393.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0223-f0164.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0223-f0164.jpg</figcaption>
+              <img src="light-t0389-f0380.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0389-f0380.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0343-f0294.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0343-f0294.jpg</figcaption>
+              <img src="light-t0241-f0179.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0241-f0179.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0160-f0146.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0160-f0146.jpg</figcaption>
+              <img src="light-t0491-f0398.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0491-f0398.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="light-t0026-f0035.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">light-t0026-f0035.jpg</figcaption>
+              <img src="light-t0245-f0181.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">light-t0245-f0181.jpg</figcaption>
             </figure>
         
         </div>
@@ -13670,18 +13674,8 @@ dtype: int64
         <div style="display: flex; flex-flow: row wrap; text-align: center;">
         
             <figure style="margin: 5px !important;">
-              <img src="medium-t0297-f0259.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0297-f0259.jpg</figcaption>
-            </figure>
-        
-            <figure style="margin: 5px !important;">
               <img src="medium-t0287-f0255.jpg" style="height: auto">
               <figcaption style="font-size: 0.6em">medium-t0287-f0255.jpg</figcaption>
-            </figure>
-        
-            <figure style="margin: 5px !important;">
-              <img src="medium-t0305-f0262.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0305-f0262.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
@@ -13690,8 +13684,23 @@ dtype: int64
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="medium-t0317-f0270.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0317-f0270.jpg</figcaption>
+              <img src="medium-t0313-f0267.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0313-f0267.jpg</figcaption>
+            </figure>
+        
+            <figure style="margin: 5px !important;">
+              <img src="medium-t0296-f0258.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0296-f0258.jpg</figcaption>
+            </figure>
+        
+            <figure style="margin: 5px !important;">
+              <img src="medium-t0279-f0250.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0279-f0250.jpg</figcaption>
+            </figure>
+        
+            <figure style="margin: 5px !important;">
+              <img src="medium-t0270-f0242.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0270-f0242.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
@@ -13700,23 +13709,18 @@ dtype: int64
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="medium-t0256-f0184.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0256-f0184.jpg</figcaption>
+              <img src="medium-t0259-f0187.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0259-f0187.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="medium-t0632-f0443.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0632-f0443.jpg</figcaption>
+              <img src="medium-t0298-f0259.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0298-f0259.jpg</figcaption>
             </figure>
         
             <figure style="margin: 5px !important;">
-              <img src="medium-t0285-f0254.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0285-f0254.jpg</figcaption>
-            </figure>
-        
-            <figure style="margin: 5px !important;">
-              <img src="medium-t0268-f0221.jpg" style="height: auto">
-              <figcaption style="font-size: 0.6em">medium-t0268-f0221.jpg</figcaption>
+              <img src="medium-t0271-f0246.jpg" style="height: auto">
+              <figcaption style="font-size: 0.6em">medium-t0271-f0246.jpg</figcaption>
             </figure>
         
         </div>
