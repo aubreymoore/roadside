@@ -9,7 +9,9 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # echo an error message before exiting
 trap 'echo "\"${last_command}\" command generated exit code $?."' EXIT
 
-NOTEBOOK="reports/job27.ipynb"
+mkdir -p reports/job27
+
+NOTEBOOK="reports/job27/job27.ipynb"
 papermill --prepare-only get-random-bounding-boxes.ipynb $NOTEBOOK -y '{"NSAMPLES":"10"}' 
 jupyter nbconvert --execute --to html $NOTEBOOK
 
