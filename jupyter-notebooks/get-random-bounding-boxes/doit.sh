@@ -18,20 +18,12 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # echo an error message before exiting
 trap 'echo "\"${last_command}\" command generated exit code $?."' EXIT
 
-# Ensure output directory exists; nothing is deleted if it does
+# Ensure output directory exists (nothing is over-written if it does)
 mkdir -p reports/job28
 
 # ASSIGN VARIABLES
 
 NOTEBOOK="reports/job28/job28.ipynb"
-
-# Parameters for get-random-bounding-boxes.ipynb
-#DATADIR = '/media/aubrey/9C33-6BBD/job28'
-#CVATXMLFILE = 'DONT-ANNOTATE-06-30-2020-134257-5-class-inference.xml'
-#VIDEOFILE = '20200630_134257_processed.mp4'
-#NSAMPLES = '10'
-#REPORTURL = 'https://raw.githubusercontent.com/aubreymoore/roadside/master/jupyter-notebooks/get-random-bounding-boxes/reports'
-#REPORTDIR = 'job28'
 
 # EXECUTE
 
@@ -49,6 +41,7 @@ jupyter nbconvert --execute --to html $NOTEBOOK
 
 cd ~/Desktop/roadside
 git config --global credential.helper store
+git pull
 git add .
 git commit -m 'automated push'
 git push
