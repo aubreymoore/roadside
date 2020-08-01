@@ -1,0 +1,23 @@
+# Add a CSV to the MySQL objects table
+# Includes a workaround to create geometry column (coords) so that QGIS can plot points on a map
+
+import pandas as pd
+from sqlalchemy import create_engine
+
+CSV = '/media/aubrey/9C33-6BBD/20200630_132859/20200630_132859_gps_obs.csv'
+VIDEO = '20200630_132859.mp4'
+USER = 'savan'
+PASSWORD = 'oryctes_rhinoceros'
+
+engine = create_engine(f'mysql+pymysql://{USER}:{PASSWORD}@mysql.guaminsects.net/videosurvey')
+
+df = pd.read_csv(CSV)
+df['video_file'] = VIDEO
+conn = engine.connect()
+conn.execute('DROP TABLE IF EXISTS temp;')
+df.to_sql("temp", engine, index=False, if_exists="replace")
+
+conn.execute('ALTER TABLE temp ADD coords POINT;')
+conn.execute('UPDATE temp SET coords=POINT(lon,lat);')
+conn.execute('INSERT INTO objects SELECT * FROM temp;')
+conn.close()
