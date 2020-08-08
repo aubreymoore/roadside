@@ -7,6 +7,8 @@ from qgis.core import *
 #from PyQt5.QtWidgets import QAction, QDialog, QFormLayout
 from PyQt5.QtGui import *
 
+# Set project CRS to EPSG:3857. This is the one used by OSM and coordinates are in meters.
+#QgsProject.instance().setCrs(QgsCoordinateReferenceSystem(3857))
 
 print('Loading OSM')
 
@@ -29,38 +31,63 @@ if not vlayer.isValid():
 else:
     QgsProject.instance().addMapLayer(vlayer)
 
+    # Reproject objects layer from EPSG:4326 to EPSG:3857 so that we can do a spatial join
+    print('Reprojecting objects layer.')
+    parameters = {'INPUT': 'objects', 'TARGET_CRS': 'EPSG:3857', 'OUTPUT': 'memory:Reprojected'}
+    result = processing.run('native:reprojectlayer', parameters)
+    QgsProject.instance().addMapLayer(result['OUTPUT'])
+    
+
 print('Create grid')
 
 # DON'T RECREATE GRID: JUST LOAD IT
 
-processing.run("qgis:creategrid", {'TYPE': 4,
-            'EXTENT': '144.61,144.97,13.23,13.67',
-            'HSPACING': 0.01,
-            'VSPACING': 0.01,
-            'CRS': 'ProjectCrs',
-            'OUTPUT': '/home/aubrey/Desktop/roadside/jupyter-notebooks/videosurveydb/grid.shp'  
+# hexagonal grid
+
+#processing.run("qgis:creategrid", {'TYPE': 4,
+#            'EXTENT': '144.61,144.97,13.23,13.67',
+#            'HSPACING': 0.01,
+#            'VSPACING': 0.01,
+#            'CRS': 'ProjectCrs',
+#            'OUTPUT': '/home/aubrey/Desktop/roadside/jupyter-notebooks/videosurveydb/grid.shp'  
+#             })
+#iface.addVectorLayer('grid.shp','grid','ogr')
+
+
+# rectangular grid
+
+result = processing.run("qgis:creategrid", {'TYPE': 2,
+            'EXTENT': '16098000,16137000,1486000,1535000',
+            'HSPACING': 1000.0,
+            'VSPACING': 1000.0,
+            'CRS': 'EPSG:3857',
+            'OUTPUT': 'memory:grid'  
              })
-iface.addVectorLayer('grid.shp','grid','ogr')
+QgsProject.instance().addMapLayer(result['OUTPUT'])
 
 
 print('Create join')
+# processing.algorithmHelp("qgis:joinbylocationsummary")
 
 parameters = {
     'INPUT': 'grid',
-    'JOIN': 'objects',
+    'JOIN': 'Reprojected',
     'PREDICATE': 0, # intersects
     'JOIN_FIELDS': 'damage',
     'SUMMARIES': 6, # mean
     'DISCARD_NONMATCHING': True,
-    'OUTPUT': '/home/aubrey/Desktop/roadside/jupyter-notebooks/videosurveydb/mean_damage_index.shp'
+    'OUTPUT': 'memory:mean_damage_index'
 }
-processing.run("qgis:joinbylocationsummary", parameters)
-iface.addVectorLayer('mean_damage_index.shp','mean_damage_index','ogr')
+result = processing.run("qgis:joinbylocationsummary", parameters)
+QgsProject.instance().addMapLayer(result['OUTPUT'])
+
+
+#iface.addVectorLayer('mean_damage_index.shp','mean_damage_index','ogr')
 
 print('Style mean damage index')
 
 join_layer = QgsProject.instance().mapLayersByName('mean_damage_index')[0]
-target_field = 'damage_mea'
+target_field = 'damage_mean'
 
 legend = [
     {'low':0.0, 'high':0.0, 'color':'#008000', 'label':'No damage'},
@@ -82,37 +109,37 @@ myRenderer.setMode(QgsGraduatedSymbolRenderer.Custom)
 
 join_layer.setRenderer(myRenderer)
 
-print('Zoom to grid')
-
-path = 'grid.shp'
-layerName = 'grid'
-
-layer = QgsVectorLayer(path, layerName, 'ogr')
-ex    = layer.extent()
-
-# Add a small space/border on each side of the layer
-hborder = ex.height() / 100
-wborder = ex.width() / 100
-ex.set(ex.xMinimum() - wborder, 
-       ex.yMinimum() - hborder, 
-       ex.xMaximum() + wborder, 
-       ex.yMaximum() + hborder
-)
-
-# Find out if we need to transform coordinates
-proj = QgsProject.instance()
-if layer.crs().authid() != proj.crs().authid():
-    print("Layer has not the same CRS as proj", 
-          layer.crs().authid(), 
-          proj.crs().authid()
-    )
-    tr = QgsCoordinateTransform(layer.crs(), proj.crs(), proj)
-    ex = tr.transform(ex)
-
-iface.mapCanvas().setExtent(ex)
-iface.mapCanvas().refresh()
-
-
+#print('Zoom to grid')
+#
+#path = 'grid.shp'
+#layerName = 'grid'
+#
+#layer = QgsVectorLayer(path, layerName, 'ogr')
+#ex    = layer.extent()
+#
+## Add a small space/border on each side of the layer
+#hborder = ex.height() / 100
+#wborder = ex.width() / 100
+#ex.set(ex.xMinimum() - wborder, 
+#       ex.yMinimum() - hborder, 
+#       ex.xMaximum() + wborder, 
+#       ex.yMaximum() + hborder
+#)
+#
+## Find out if we need to transform coordinates
+#proj = QgsProject.instance()
+#if layer.crs().authid() != proj.crs().authid():
+#    print("Layer has not the same CRS as proj", 
+#          layer.crs().authid(), 
+#          proj.crs().authid()
+#    )
+#    tr = QgsCoordinateTransform(layer.crs(), proj.crs(), proj)
+#    ex = tr.transform(ex)
+#
+#iface.mapCanvas().setExtent(ex)
+#iface.mapCanvas().refresh()
+#
+###
 print("FINISHED")
 
 

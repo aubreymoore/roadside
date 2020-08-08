@@ -8,3 +8,5 @@
 *.xml
 *.gz
 *.toc
+secrets.py
+
