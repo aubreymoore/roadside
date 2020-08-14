@@ -1,4 +1,4 @@
-.ipy_checkpoints
+.ipynb_checkpoints
 *.aux
 *.bbl
 *.bcf
@@ -9,4 +9,6 @@
 *.gz
 *.toc
 secrets.py
+__pycache__
+
 
