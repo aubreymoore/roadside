@@ -9,3 +9,5 @@ https://aubreymoore.github.io/roadside/jupyter%20notebooks/bounding-boxes/report
 https://aubreymoore.github.io/roadside/jupyter-notebooks/videosurveydb/webmap/qgis2web_2020_08_02-11_03_53_867634
 
 https://aubreymoore.github.io/roadside/jupyter-notebooks/videosurveydb/webmap/qgis2web_2020_08_06-18_26_43_625319
+
+https://aubreymoore.github.io/roadside/jupyter-notebooks/videosurveydb/webmap/qgis2web_2020_08_19-10_41_00_805336
