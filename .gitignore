@@ -10,5 +10,5 @@
 *.toc
 secrets.py
 __pycache__
-jupiter-notebooks/cvat_xml_to_mysql/mysecrets.py
+jupyter-notebooks/cvat_xml_to_mysql/mysecrets.py
 
