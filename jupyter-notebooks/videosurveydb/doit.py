@@ -1,5 +1,11 @@
 """
 
+# Input files
+
+* {date}_trees.csv
+* {date}_vcuts.csv
+* {datetime}geojson One for each video
+
 # Clean up
 
 * Put all the **geojson** layers into a group called **tracks** and edit style
@@ -23,38 +29,101 @@ from qgis.core import *
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtCore import Qt, QRectF
 from PyQt5.QtGui import *
-
-#from qgis.core import (
-#    QgsVectorLayer,
-#    QgsPoint,
-#    QgsPointXY,
-#    QgsProject,
-#    QgsGeometry,
-#    QgsMapRendererJob,
-#)
-#
-#from qgis.gui import (
-#    QgsMapCanvas,
-#    QgsVertexMarker,
-#    QgsMapCanvasItem,
-#    QgsRubberBand,
-#)
-#
-#
-##from PyQt4.QtGui import *  
-#from PyQt5.QtCore import QSettings, QTranslator, QVersionNumber, QCoreApplication, Qt, QObject, pyqtSignal 
-#from PyQt5.QtGui import QIcon 
-#from PyQt5.QtWidgets import QAction, QDialog, QFormLayout
+from sqlalchemy import create_engine
+import pandas as pd
+import os
 
 DATADIR = '/home/aubrey/Desktop/roadside/jupyter-notebooks/videosurveydb'
-
-def set_layer_visibility(layer_name, True_or_False):
-    prj = QgsProject.instance()
-    layer = prj.mapLayersByName(layer_name)[0]
-    prj.layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(True_or_False)
+VIDEOLIST = ['20200630_131814.mp4', '20200630_132859.mp4', '20200630_133212.mp4',
+    '20200630_134257.mp4', '20200703_121802.mp4', '20200703_122847.mp4',
+    '20200703_124043.mp4', '20200703_125239.mp4', '20200703_130434.mp4',
+    '20200703_131630.mp4', '20200703_132826.mp4', '20200706_120855.mp4',
+    '20200706_122002.mp4', '20200706_123047.mp4', '20200706_124645.mp4',
+    '20200706_125730.mp4', '20200706_130926.mp4', '20200706_132122.mp4',
+    '20200706_133318.mp4']
     
-   # Set project CRS to EPSG:3857. This is the one used by OSM and coordinates are in meters.
-QgsProject.instance().setCrs(QgsCoordinateReferenceSystem(3857))
+#VIDEOLIST = ['20200703_124043.mp4', '20200703_125239.mp4', '20200703_130434.mp4',
+#    '20200703_131630.mp4', '20200703_132826.mp4']
+
+    
+def video_list_string():
+    return ','.join("'{}'".format(v) for v in VIDEOLIST)
+
+
+def connect_to_db():
+    engine = create_engine('mysql+pymysql://{}:{}@mysql.guaminsects.net/videosurvey'.format('readonlyguest', 'readonlypassword'))
+    conn = engine.connect()
+    return conn
+
+
+################################################################################
+# Get data from the database and write to files 
+################################################################################
+
+
+def write_geojson_files():
+    """
+    Writes all geojson strings from the videos database table to text files named like
+    20200630_131814.geojson
+    Input paramater is a date sting in the form '20200630'
+    """
+    sql = """
+    SELECT video_id, gps_track_json
+    FROM videos 
+    WHERE video_id IN ({});
+    """.format(video_list_string());
+    df = pd.read_sql_query(sql, conn)
+    for index, row in df.iterrows():
+        filename = row.video_id.replace('.mp4', '.geojson')
+        cwd = os.getcwd()
+        filename = '{}/{}'.format(DATADIR, filename)
+        print('writing {}'.format(filename))
+        with open(filename, 'w') as f:
+            f.write(row.gps_track_json)
+
+
+def write_trees_csv():
+    """
+    Writes tree data to a CSV
+    """
+    sql = """SELECT frames.frame_id, lat, lon, damage 
+             FROM videos, frames, trees 
+             WHERE 
+             videos.video_id=frames.video_id
+             AND frames.frame_id=trees.frame_id
+             AND videos.video_id IN ({});
+          """.format(video_list_string())
+    df = pd.read_sql_query(sql, conn)
+    filename = '{}/trees.csv'.format(DATADIR)
+    df.to_csv(filename, index=False)
+
+
+def write_vcuts_csv():
+    """
+    Writes vcut data to a CSV
+    """
+    sql = """SELECT frames.frame_id, lat, lon 
+             FROM videos, frames, vcuts 
+             WHERE 
+             videos.video_id=frames.video_id
+             AND frames.frame_id=vcuts.frame_id 
+             AND videos.video_id IN ({});
+          """.format(video_list_string())
+    df = pd.read_sql_query(sql, conn)
+    filename = '{}/vcuts.csv'.format(DATADIR)
+    df.to_csv(filename, index=False)
+
+
+def get_data_from_db():
+    write_geojson_files()
+    write_trees_csv()
+    write_vcuts_csv()
+
+
+################################################################################
+# Load layers
+################################################################################
+
 
 def load_guam_osm():
     canvas = iface.mapCanvas()
@@ -66,20 +135,50 @@ def load_guam_osm():
     canvas.update()
 
 
-def load_objects_layer():
-    uri = "file://{}/objects.csv?delimiter={}&xField={}&yField={}&crs=epsg:4326".format(DATADIR, ",", "lon", "lat")
-    vlayer = QgsVectorLayer(uri, 'objects', 'delimitedtext')
+def load_tracks_layers(): 
+    geojsonlist = [filename.replace('.mp4', '.geojson') for filename in VIDEOLIST]
+    for f in geojsonlist:
+        vlayer = QgsVectorLayer(f, f, 'ogr')
+        QgsProject.instance().addMapLayer(vlayer, True)
+        vlayer.renderer().symbol().setWidth(1)
+        vlayer.renderer().symbol().setColor(QColor('#ff0000'))
+        vlayer.triggerRepaint()
+
+
+def load_trees_layer():
+    uri = "file://{}/trees.csv?delimiter=,&xField=lon&yField=lat&crs=epsg:4326".format(DATADIR)
+    vlayer = QgsVectorLayer(uri, 'trees', 'delimitedtext')
     if vlayer.isValid():
         QgsProject.instance().addMapLayer(vlayer)
 
         # Reproject objects layer from EPSG:4326 to EPSG:3857 so that we can do a spatial join
         print('Reprojecting objects layer.')
-        parameters = {'INPUT': 'objects', 'TARGET_CRS': 'EPSG:3857', 'OUTPUT': 'memory:Reprojected'}
+        parameters = {'INPUT': 'trees', 'TARGET_CRS': 'EPSG:3857', 'OUTPUT': 'memory:Reprojected'}
         result = processing.run('native:reprojectlayer', parameters)
         QgsProject.instance().addMapLayer(result['OUTPUT'])
     else:
-        print("Layer failed to load!")
+        print("ERROR: trees layer failed to load!")
 
+
+def load_vcuts_layer():
+    uri = "file://{}/vcuts.csv?delimiter={}&xField={}&yField={}&crs=epsg:4326".format(DATADIR, ",", "lon", "lat")
+    vlayer = QgsVectorLayer(uri, 'vcuts', 'delimitedtext')
+    if vlayer.isValid():
+        QgsProject.instance().addMapLayer(vlayer)
+    else:
+        print("ERROR: vcut layer failed to load!")
+
+
+################################################################################
+# Other stuff
+################################################################################
+
+
+def set_layer_visibility(layer_name, True_or_False):
+    prj = QgsProject.instance()
+    layer = prj.mapLayersByName(layer_name)[0]
+    prj.layerTreeRoot().findLayer(layer.id()).setItemVisibilityChecked(True_or_False)
+    
 
 def create_grid():
     result = processing.run("qgis:creategrid", {'TYPE': 2,
@@ -135,27 +234,58 @@ def zoom_to_guam():
     canvas.refresh()
 
 
-def add_track_geojsons():    
-    geojsonlist = glob('*.geojson')
-    for f in geojsonlist:
-        vlayer = QgsVectorLayer(f, f, 'ogr')
-        QgsProject.instance().addMapLayer(vlayer, True)
+def get_video_list():
+    return pd.read_sql_query("SELECT video_id FROM videos ORDER BY video_id;", conn)
     
 
-# MAIN
+def cleanup():
+    project = QgsProject.instance()
 
+    # zoom to mean_damage_index layer - NOT WORKING
+    layer = QgsProject.instance().mapLayersByName('mean_damage_index')[0]
+    canvas = qgis.utils.iface.mapCanvas()
+    canvas.setExtent(layer.extent())
+
+    #delete grid layer
+    to_be_deleted = project.mapLayersByName('grid')[0]
+    project.removeMapLayer(to_be_deleted.id())
+
+    #delete trees layer
+    to_be_deleted = project.mapLayersByName('trees')[0]
+    project.removeMapLayer(to_be_deleted.id())
+
+    #change name of layer from Reprojected to trees
+    to_be_renamed = project.mapLayersByName('Reprojected')[0]
+    to_be_renamed.setName('trees')
+
+    #style trees layer; set color to #00ff00
+    layer = project.mapLayersByName('trees')[0]
+    layer.renderer().symbol().setColor(QColor(0,255,0))
+    layer.triggerRepaint()
+
+    #style vcuts; set color to #ff00ff
+    layer = project.mapLayersByName('vcuts')[0]
+    layer.renderer().symbol().setColor(QColor(255,0,255))
+    layer.triggerRepaint()
+
+
+################################################################################
+# MAIN
+################################################################################
+
+# Set project CRS to EPSG:3857. This is the one used by OSM and coordinates are in meters.
+#QgsProject.instance().setCrs(QgsCoordinateReferenceSystem(3857))
+
+conn = connect_to_db()
+get_data_from_db()
 load_guam_osm()
-add_track_geojsons()
-#load_guam_osm()
-#zoom_to_guam()
-load_objects_layer()
+load_tracks_layers()
+load_trees_layer()
 create_grid()
 create_join()
 style_mean_damage_index()
-
-set_layer_visibility('grid', False)
-set_layer_visibility('Reprojected', False)
-set_layer_visibility('objects', False)
+load_vcuts_layer()
+cleanup()
 
 
 print("FINISHED")
