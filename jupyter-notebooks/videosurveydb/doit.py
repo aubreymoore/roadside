@@ -45,6 +45,16 @@ VIDEOLIST = ['20200630_131814.mp4', '20200630_132859.mp4', '20200630_133212.mp4'
 #VIDEOLIST = ['20200703_124043.mp4', '20200703_125239.mp4', '20200703_130434.mp4',
 #    '20200703_131630.mp4', '20200703_132826.mp4']
 
+
+def remove_layer(layer_name):
+    to_be_deleted = project.mapLayersByName(layer_name)[0]
+    project.removeMapLayer(to_be_deleted.id())
+    
+    
+def rename_layer(original_name, new_name):
+    to_be_renamed = project.mapLayersByName(original_name)[0]
+    to_be_renamed.setName(new_name)
+
     
 def video_list_string():
     return ','.join("'{}'".format(v) for v in VIDEOLIST)
@@ -140,9 +150,6 @@ def load_tracks_layers():
     for f in geojsonlist:
         vlayer = QgsVectorLayer(f, f, 'ogr')
         QgsProject.instance().addMapLayer(vlayer, True)
-        vlayer.renderer().symbol().setWidth(1)
-        vlayer.renderer().symbol().setColor(QColor('#ff0000'))
-        vlayer.triggerRepaint()
 
 
 def load_trees_layer():
@@ -150,12 +157,12 @@ def load_trees_layer():
     vlayer = QgsVectorLayer(uri, 'trees', 'delimitedtext')
     if vlayer.isValid():
         QgsProject.instance().addMapLayer(vlayer)
-
-        # Reproject objects layer from EPSG:4326 to EPSG:3857 so that we can do a spatial join
-        print('Reprojecting objects layer.')
-        parameters = {'INPUT': 'trees', 'TARGET_CRS': 'EPSG:3857', 'OUTPUT': 'memory:Reprojected'}
-        result = processing.run('native:reprojectlayer', parameters)
-        QgsProject.instance().addMapLayer(result['OUTPUT'])
+        processing.runAndLoadResults("native:reprojectlayer", 
+        {'INPUT':'trees',
+        'TARGET_CRS':'EPSG:3857',
+        'OUTPUT':'trees3857'})
+        remove_layer('trees')
+        rename_layer('Reprojected', 'trees')
     else:
         print("ERROR: trees layer failed to load!")
 
@@ -195,15 +202,15 @@ def create_join():
     # processing.algorithmHelp("qgis:joinbylocationsummary")
     parameters = {
         'INPUT': 'grid',
-        'JOIN': 'Reprojected',
+        'JOIN': 'trees',
         'PREDICATE': 0, # intersects
         'JOIN_FIELDS': 'damage',
         'SUMMARIES': 6, # mean
         'DISCARD_NONMATCHING': True,
-        'OUTPUT': 'memory:mean_damage_index'
+        'OUTPUT': 'mean_damage_index'
     }
-    result = processing.run("qgis:joinbylocationsummary", parameters)
-    QgsProject.instance().addMapLayer(result['OUTPUT'])
+    processing.runAndLoadResults("qgis:joinbylocationsummary", parameters)
+    rename_layer('Joined layer', 'mean_damage_index')
 
 
 def style_mean_damage_index():
@@ -226,7 +233,34 @@ def style_mean_damage_index():
     myRenderer.setMode(QgsGraduatedSymbolRenderer.Custom)               
     join_layer.setRenderer(myRenderer)
 
+
+def merge_tracks(): 
+    project = QgsProject.instance()
+    layers_to_be_included = []    
+    layerList = project.layerTreeRoot().findLayers()
+    for layer in layerList:
+        name = layer.name()
+        if name.endswith('.geojson'):
+            layers_to_be_included.append(name)  
+    processing.runAndLoadResults("native:mergevectorlayers", 
+        {'LAYERS':layers_to_be_included,
+        'CRS':QgsCoordinateReferenceSystem('EPSG:3857'),
+        'OUTPUT':'memory:'})
+    processing.runAndLoadResults('native:simplifygeometries', 
+        {'INPUT':'Merged', 
+        'METHOD':0, 
+        'TOLERANCE':10, 
+        'OUTPUT':'tracks'})
+    to_be_renamed = project.mapLayersByName('Simplified')[0]
+    to_be_renamed.setName('tracks') 
     
+    layer = project.mapLayersByName('tracks')[0]
+    layer.renderer().symbol().setWidth(1)
+    layer.renderer().symbol().setColor(QColor('#ff0000'))
+    layer.triggerRepaint()
+
+   
+   
 def zoom_to_guam():
     rect = QgsRectangle(16098000.0, 1486000.0, 16137000.0, 1535000.0)
     canvas = iface.mapCanvas()
@@ -239,10 +273,9 @@ def get_video_list():
     
 
 def cleanup():
-    project = QgsProject.instance()
 
     # zoom to mean_damage_index layer - NOT WORKING
-    layer = QgsProject.instance().mapLayersByName('mean_damage_index')[0]
+    layer = project.mapLayersByName('mean_damage_index')[0]
     canvas = qgis.utils.iface.mapCanvas()
     canvas.setExtent(layer.extent())
 
@@ -250,13 +283,19 @@ def cleanup():
     to_be_deleted = project.mapLayersByName('grid')[0]
     project.removeMapLayer(to_be_deleted.id())
 
-    #delete trees layer
-    to_be_deleted = project.mapLayersByName('trees')[0]
-    project.removeMapLayer(to_be_deleted.id())
+    
+    #delete Merged layer
+    to_be_deleted = project.mapLayersByName('Merged')[0]
+    project.removeMapLayer(to_be_deleted.id()) 
 
-    #change name of layer from Reprojected to trees
-    to_be_renamed = project.mapLayersByName('Reprojected')[0]
-    to_be_renamed.setName('trees')
+    # Delete individual tracks (*.geojson)
+    for id, layer in project.mapLayers().items():
+        if layer.name().endswith('.geojson'):
+            project.removeMapLayer(id)
+ 
+#    #change name of layer from Reprojected to trees
+#    to_be_renamed = project.mapLayersByName('Reprojected')[0]
+#    to_be_renamed.setName('trees')
 
     #style trees layer; set color to #00ff00
     layer = project.mapLayersByName('trees')[0]
@@ -276,17 +315,17 @@ def cleanup():
 # Set project CRS to EPSG:3857. This is the one used by OSM and coordinates are in meters.
 #QgsProject.instance().setCrs(QgsCoordinateReferenceSystem(3857))
 
+project = QgsProject.instance()
 conn = connect_to_db()
 get_data_from_db()
 load_guam_osm()
 load_tracks_layers()
+merge_tracks()
 load_trees_layer()
 create_grid()
 create_join()
 style_mean_damage_index()
 load_vcuts_layer()
 cleanup()
-
-
 print("FINISHED")
 
