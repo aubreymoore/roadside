@@ -4,16 +4,25 @@ make_crb_damage_map
 
 Aubrey Moore 2020-08-26
 
-This Python script uses QGIS 3.4 to generate a CRB damage map from roadside 
-video survey data stored in a MySQL database (mysql.guaminsects.net/videosurvey). 
+This Python script uses QGIS 3.4 to generate a CRB damage map from roadside
+video survey data stored in a MySQL database (mysql.guaminsects.net/videosurvey).
+Read-only authentication is provided by the script.
 
 Data extracted from videos specified in VIDEOLIST will be included in the map.
 
-Launch QGIS and run this script using this command line:
+
+USAGE
+
+# Create an empty directory and download the most recent version of this script.
+
+mkdir test_crb_damage_mapper
+cd test_crb_damage_mapper
+wget https://github.com/aubreymoore/roadside/raw/master/jupyter-notebooks/videosurveydb/make_crb_damage_map.py
+
+# Launch QGIS and run this script using this command line:
+
 qgis --nologo --code make_crb_damage_map.py
 
-Download the most recent version of this script using this command line:
-wget https://github.com/aubreymoore/roadside/raw/master/jupyter-notebooks/videosurveydb/make_crb_damage_map.py
 
 NOTES
 
@@ -179,7 +188,8 @@ def load_tracks_layers():
 
 
 def load_trees_layer():
-    uri = "file://{}/trees.csv?type=csv&detectTypes=yes&xField=lon&yField=lat&crs=EPSG:4326&spatialIndex=no&subsetIndex=no&watchFile=no".format(os.getcwd())  
+    uri = "file://{}/trees.csv?type=csv&detectTypes=yes&xField=lon&yField=lat&crs=EPSG:4326&spatialIndex=no&subsetIndex=no&watchFile=no".format(
+        os.getcwd())
     vlayer = QgsVectorLayer(uri, 'trees', 'delimitedtext')
     project.addMapLayer(vlayer)
     processing.runAndLoadResults("native:reprojectlayer",
@@ -191,7 +201,8 @@ def load_trees_layer():
 
 
 def load_vcuts_layer():
-    uri = "file://{}/vcuts.csv?type=csv&detectTypes=yes&xField=lon&yField=lat&crs=EPSG:4326&spatialIndex=no&subsetIndex=no&watchFile=no".format(os.getcwd())  
+    uri = "file://{}/vcuts.csv?type=csv&detectTypes=yes&xField=lon&yField=lat&crs=EPSG:4326&spatialIndex=no&subsetIndex=no&watchFile=no".format(
+        os.getcwd())
     vlayer = QgsVectorLayer(uri, 'vcuts', 'delimitedtext')
     QgsProject.instance().addMapLayer(vlayer)
 
@@ -315,7 +326,6 @@ def cleanup():
     for id, layer in project.mapLayers().items():
         if layer.name().endswith('.geojson'):
             project.removeMapLayer(id)
-
 
     # style trees layer; set color to #00ff00
     layer = project.mapLayersByName('trees')[0]
