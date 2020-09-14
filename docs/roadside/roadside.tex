@@ -34,42 +34,46 @@ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=tru
 
 \usepackage{datetime2}
 
+\usepackage{courier}
+\usepackage{listings}
+\lstset{basicstyle=\tiny\ttfamily,
+	columns=fullflexible,
+	%basewidth=0.51em,
+	frame=single}
+
 % Prevent page breaks within paragraphs
 % https://tex.stackexchange.com/questions/21983/how-to-avoid-page-breaks-inside-paragraphs
 \widowpenalties 1 10000
 
 \begin{document}
 
-\titlehead{PRELIMINARY RESULTS}
+\titlehead{TECHNICAL REPORT}
 
-\title{Roadside Video Surveys of Coconut Rhinoceros Beetle Damage\\\\
-	\includegraphics[width=0.25\textwidth]{images/car}
-	\includegraphics[width=0.7\textwidth]{images/webmap}
-}
+\title{Development of Automated Roadside Video Surveys for Detecting and Monitoring Coconut Rhinoceros Beetle Damage}
+
+%\includegraphics[width=0.25\textwidth]{images/car}
+%\includegraphics[width=0.7\textwidth]{images/webmap}
 
 \author{Aubrey Moore}
 
-\date{\DTMnow}
-
-
-
 \maketitle
 
+\footnote{The most recent version of this document can be downloaded from\\
+	\url{https://github.com/aubreymoore/roadside/blob/master/docs/roadside/roadside.pdf}.}
 
 \newpage
 
 \tableofcontents
+\lstlistoflistings
+\listoffigures
 
-\footnote{The most recent version of this document can be downloaded from\\
-\url{https://github.com/aubreymoore/roadside/blob/master/docs/roadside/roadside.pdf}.}
-
-\pagebreak
+\newpage
 
 \section{Background}
 
 To see how coconut rhinoceros beetle damage surveys are currently done, please read \cite{jackson_rhinoceros_2019-1} and \cite{vaqalo_coconut_2017}.
 
-\section{Data Acquisition}
+\section{Recording Roadside Videos}
 
 \subsection{Mounting a Smart Phone on a Vehicle}
 
@@ -155,6 +159,42 @@ The author has cobbled together a \textbf{jupyter notebook} called \textbf{geore
 \subsection{Mapping}
 
 Interactive web maps for displaying coconut rhinoceros beetle roadside video survey routes with popup thumbnail images at points of interest can be put together using QGIS with the QGIS2WEB plugin. A prototype QGIS project is available in a GitHub repo at \url{https://github.com/aubreymoore/qgiswebmap} and a prototype map is available at \url{http://github.io/aubreymoore/qgiswebmap/webmap/webmap}.
+
+\section{Detecting CRB Damage in Video Frames}
+
+\section{Creating a CRB Damage Survey Database}
+
+Have a look at Listing \ref{create_tables}.
+
+\label{create_tables}
+\lstinputlisting[
+language=SQL,
+caption={create\_tables.sql},
+float,
+label=create_tables,
+]{../../spatialite/create_tables.sql}
+
+\lstinputlisting[
+language=SQL, 
+caption={create\_views.sql},
+float
+]{../../spatialite/create_views.sql}
+
+\lstinputlisting[
+language=SQL, 
+caption={create\_grid.sql},
+float
+]{../../spatialite/create_grid.sql}
+
+
+\section{Visualizing Survey Results on a Map}
+
+\lstinputlisting[
+language=Python,
+caption={create\_crb\_damage\_map.py},
+float
+]{../../spatialite/make_crb_damage_map.py}
+
 
 \printbibliography	
 
