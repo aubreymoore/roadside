@@ -1,3 +1,14 @@
+# qgis --codepath make_crb_damage_map.py
+
+# This script is not yet complete.
+
+# After it gas run, zoom to the mean_damage_index layer.
+
+# Use the qgis2web plugin to make an interactive web map
+# leaflet; Add layer list: expanded; extnet: fit layers extent; template:full_screen
+# Upload /tmp/qgis2web/qgis2web/qgis2web_2020_09_16-06_58_26_614131 to
+# https://github.com/aubreymoore/Guam-CRB-damage-map
+
 def load_guam_osm():
     canvas = iface.mapCanvas()
     url = 'type=xyz&url=https://a.tile.openstreetmap.org/{z}/{x}/{y}.png&crs=EPSG3857'
@@ -21,7 +32,7 @@ def load_layer_from_db(table_name):
 
 
 def style_mean_damage_index():
-    join_layer = QgsProject.instance().mapLayersByName(
+    mean_damage_index_layer = QgsProject.instance().mapLayersByName(
         'mean_damage_index')[0]
     target_field = 'mean_damage_index'
     legend = [
@@ -34,23 +45,34 @@ def style_mean_damage_index():
     ]
     myRangeList = []
     for i in legend:
-        symbol = QgsSymbol.defaultSymbol(join_layer.geometryType())
+        symbol = QgsSymbol.defaultSymbol(mean_damage_index_layer.geometryType())
         symbol.setColor(QColor(i['color']))
         myRangeList.append(QgsRendererRange(
             i['low'], i['high'], symbol, i['label'], True))
     myRenderer = QgsGraduatedSymbolRenderer(target_field, myRangeList)
     myRenderer.setMode(QgsGraduatedSymbolRenderer.Custom)
-    join_layer.setRenderer(myRenderer)
+    mean_damage_index_layer.setRenderer(myRenderer)
+
+    
+def style_tracks_layer():
+    tracks_layer = QgsProject.instance().mapLayersByName('tracks')[0]
+    tracks_layer.renderer().symbol().setWidth(1)
+    tracks_layer.renderer().symbol().setColor(QColor(255,0,0))
+  
+
+def style_vcuts_view_layer():
+    vcuts_view_layer = QgsProject.instance().mapLayersByName('vcuts_view')[0]
+    vcuts_view_layer.renderer().symbol().setColor(QColor(255,0,255))
 
     
 # MAIN
 
 load_guam_osm()
 load_layer_from_db('tracks')
-load_layer_from_db('frames')
-load_layer_from_db('trees_view')
-load_layer_from_db('vcuts_view')
 load_layer_from_db('mean_damage_index')
+load_layer_from_db('vcuts_view')
 style_mean_damage_index()
+style_tracks_layer()
+style_vcuts_view_layer()
 
 

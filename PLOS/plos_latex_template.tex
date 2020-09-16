@@ -191,8 +191,8 @@
 \\
 Aubrey Moore\textsuperscript{1,*},
 Donald Scott\textsuperscript{2},
-Savan\textsuperscript{2},
-Rush\textsuperscript{2}
+Savan Visalpara\textsuperscript{2},
+Rush Tehrani\textsuperscript{2}
 %Name5 Surname\textsuperscript{2\ddag},
 %Name6 Surname\textsuperscript{2\ddag},
 %Name7 Surname\textsuperscript{1,2,3*},
@@ -256,7 +256,7 @@ Coming soon!
 
 \section*{Materials and methods}
 
-\subsection*{Data Acquisition: Recording Roadside Videos using a Smart Phone}
+\subsection*{Data acquisition: recording roadside videos using a smart phone}
 
 % For figure citations, please use "Fig" instead of "Figure".
 Roadside videos were recorded using a smart phone (Samsung Galaxy S10) attached the exterior of a vehicle using a magnetic mount (Fig \ref{car}).  Videos were recorded using the free OpenCamera app (url) and location was recorded using the free GPSlogger app (url). Details for mounting the smart phone and setting app parameters are available in S1.
@@ -268,10 +268,17 @@ Roadside videos were recorded using a smart phone (Samsung Galaxy S10) attached 
 \label{car}
 \end{figure}
 
-\subsection*{Digital Image Analysis: Detecting CRB Damage in Video Frames}
 
-\subsection*{Visualization: Creating a CRB Damage Map}
+\subsection*{Digital image analysis: detecting CRB damage in video frames}
 
+\subsubsection*{Object detector development}
+
+\subsubsection*{Data analysis workflow}
+
+
+\subsection*{Visualization: mapping CRB damage}
+
+An interactive web map for each survey is generated using QGIS version 3.14 using the \textbf{qgis2web} plugin. QGIS reads survey data directly from a SpatiaLite database. The database and a Python script for generating maps are available in a public repository, \url{https://github.com/aubreymoore/Guam-CRB-damage-map}.  The most current web map is publicly available on an HTML page stored in this repository, \url{https://aubreymoore.github.io/Guam-CRB-damage-map/}.
 
 % Results and Discussion can be combined.
 \section*{Results}
