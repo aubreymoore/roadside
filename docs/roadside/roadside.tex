@@ -164,26 +164,34 @@ Interactive web maps for displaying coconut rhinoceros beetle roadside video sur
 
 \section{Creating a CRB Damage Survey Database}
 
-Have a look at Listing \ref{create_tables}.
+Have a look at database diagram (Fig. \ref{fig:erd}) and code listings \ref{createtables},  \ref{createviews} and \ref{creategrid}.
 
-\label{create_tables}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{images/erd.png}
+	\caption{Database diagram.}
+	\label{fig:erd}
+\end{figure}
+
 \lstinputlisting[
 language=SQL,
 caption={create\_tables.sql},
 float,
-label=create_tables,
+label={createtables}
 ]{../../spatialite/create_tables.sql}
 
 \lstinputlisting[
 language=SQL, 
 caption={create\_views.sql},
-float
+float,
+label={createviews}
 ]{../../spatialite/create_views.sql}
 
 \lstinputlisting[
 language=SQL, 
 caption={create\_grid.sql},
-float
+float,
+label={creategrid}
 ]{../../spatialite/create_grid.sql}
 
 
@@ -192,7 +200,8 @@ float
 \lstinputlisting[
 language=Python,
 caption={create\_crb\_damage\_map.py},
-float
+float,
+label={lst:create_crb_damage_map.py}
 ]{../../spatialite/make_crb_damage_map.py}
 
 

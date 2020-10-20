@@ -19,9 +19,15 @@ def load_guam_osm():
     canvas.update()
 
 
-def load_layer_from_db(table_name):
+def get_dbpath():
+    with open('dbpath.txt') as f:
+        dbpath = f.read()
+    return dbpath
+
+
+def load_layer_from_db(dbpath, table_name):
     uri = QgsDataSourceUri()
-    uri.setDatabase('/home/aubrey/Documents/populate_spatialite/videosurvey.db')
+    uri.setDatabase(dbpath)
     schema = ''
     table = table_name
     geom_column = 'geometry'
@@ -68,9 +74,10 @@ def style_vcuts_view_layer():
 # MAIN
 
 load_guam_osm()
-load_layer_from_db('tracks')
-load_layer_from_db('mean_damage_index')
-load_layer_from_db('vcuts_view')
+dbpath = get_dbpath()
+load_layer_from_db(dbpath, 'tracks')
+load_layer_from_db(dbpath, 'mean_damage_index')
+load_layer_from_db(dbpath, 'vcuts_view')
 style_mean_damage_index()
 style_tracks_layer()
 style_vcuts_view_layer()

@@ -7,16 +7,14 @@
         camera_options TEXT,
         location_app TEXT,
         notes TEXT,
-        gb FLOAT,
-        fps FLOAT,
-        resolution TEXT,
         lens TEXT,
         camera_mount TEXT,
         vehicle TEXT,
         camera_mount_position TEXT,
         camera_orientation TEXT,
         horizontal_angle FLOAT,
-        vertical_angle FLOAT
+        vertical_angle FLOAT,
+	exif JSON
     );
 
 --
