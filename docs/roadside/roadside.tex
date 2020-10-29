@@ -23,7 +23,7 @@ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=tru
 
 \usepackage[backend=biber, style=authoryear, maxbibnames=99, dashed=false]{biblatex}
 \setlength\bibitemsep{2\itemsep}
-\addbibresource{CRB.bib}
+\addbibresource{../CRB.bib}
 
 \usepackage{pdfpages}
 \usepackage{float} % Allows use of H to place floats
@@ -62,11 +62,11 @@ breaklinks=true,pdfborder={0 0 0},pdfborderstyle={},backref=false,colorlinks=tru
 	\url{https://github.com/aubreymoore/roadside/blob/master/docs/roadside/roadside.pdf}.}
 
 \newpage
-
 \tableofcontents
+\newpage
 \lstlistoflistings
+\newpage
 \listoffigures
-
 \newpage
 
 \section{Background}
@@ -84,7 +84,7 @@ A smart phone can be mounted externally using a ball and socket anchored using a
 Optimal placement of the smart phone camera appears to be above the right-hand corner of the windshield (passenger side in the US). 
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{images/mount}
 	\caption{Smart phone mount.}
@@ -97,7 +97,7 @@ The direction of view angle has two components, a horizontal angle with respect 
 
 Optimal angles for direction of view appear to be 45 degrees to the right of direction off travel and 15 degrees above horizontal.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{images/clinometer}
 	\caption{Setting camera angles using Clinometer app.}
@@ -127,21 +127,21 @@ Standard frame rate is 30 fps. Initial recordings were made using this rate, but
 For screenshots of \textit{Video settings} see figures \ref{fig:videosettings1}, \ref{fig:videosettings2}, and \ref{fig:videosettings3}. 
 
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{images/videosettings1}
 \caption{Video settings (1/3).}
 \label{fig:videosettings1}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{images/videosettings2}
 	\caption{Video settings (2/3).}
 	\label{fig:videosettings2}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{images/videosettings3}
 	\caption{Video settings (3/3).}
@@ -151,6 +151,18 @@ For screenshots of \textit{Video settings} see figures \ref{fig:videosettings1},
 \subsection{Using the GPSLogger App}
 
 Although \textbf{Open Camera} has an option to georeference video frames, this feature proved unreliable in preliminary tests. As an alternative, it was decided to use a free called \textbf{GPSLogger} which logs timestamped GPS coordinates to a file at a frequency of once per second. \textbf{GPSLogger} runs continually in background on the phone during a series of video recordings.
+
+
+\section{Data processing}
+
+Data processing is controled by a python script, process-data.py (Listing \ref{lst:process-data.py}).
+
+\lstinputlisting[
+language=python,
+caption={process-data.py},
+label={lst:process-data.py}
+]{../../code/process-data.py}
+
 
 \subsection{Georeferencing Video Frames}
 
@@ -166,44 +178,109 @@ Interactive web maps for displaying coconut rhinoceros beetle roadside video sur
 
 Have a look at database diagram (Fig. \ref{fig:erd}) and code listings \ref{createtables},  \ref{createviews} and \ref{creategrid}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{images/erd.png}
 	\caption{Database diagram.}
 	\label{fig:erd}
 \end{figure}
 
+
 \lstinputlisting[
 language=SQL,
 caption={create\_tables.sql},
-float,
 label={createtables}
 ]{../../spatialite/create_tables.sql}
+
 
 \lstinputlisting[
 language=SQL, 
 caption={create\_views.sql},
-float,
+%float,
 label={createviews}
 ]{../../spatialite/create_views.sql}
 
 \lstinputlisting[
 language=SQL, 
 caption={create\_grid.sql},
-float,
 label={creategrid}
 ]{../../spatialite/create_grid.sql}
 
 
 \section{Visualizing Survey Results on a Map}
 
+QGIS 3.16 was used to visualize survey results on a map. 
+
+\begin{itemize}
+	\item The map was made using a python script, 
+	\textbf{create\_crb\_damage\_map.py}, 
+	(Listing \ref{lst:create-crb-damage-map.py}) which reads data from 
+	the spatialite database.
+	\item An interactive web map is then created using the \textbf{qgis2web} plugin. 
+	See Figures \ref{fig:qgis2web1} and \ref{fig:qgis2web2} for \textbf{qgis2web} parameters.
+	\item The resulting	web map, stored in index.html, modified using edit\_webmap.py ().
+	\item Finally, index.html was saved in
+	a GitHub repository and published using GitHub pages.
+\end{itemize}
+
 \lstinputlisting[
 language=Python,
 caption={create\_crb\_damage\_map.py},
-float,
-label={lst:create_crb_damage_map.py}
+label={lst:create-crb-damage-map.py}
 ]{../../spatialite/make_crb_damage_map.py}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/qgis2web1.png}
+	\caption{\textbf{ggis2web} parameters - 1.}
+	\label{fig:qgis2web1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/qgis2web2.png}
+	\caption{\textbf{ggis2web} parameters - 2.}
+	\label{fig:qgis2web2}
+\end{figure}
+
+
+\section{First Roadside Video Survey of CRB Damage on Guam}
+
+\subsection{Methods}
+
+\begin{tabular}{|l|l|l|}
+	\hline 
+	& \textbf{Development} & \textbf{Guam01 survey} \\ 
+	\hline 
+	Vehicle & Mazda Miata & Toyota Forerunner \\ 
+	\hline 
+	Cell phone & Samsung Galaxy S10 & Samsung Galaxy S8 \\ 
+    \hline 
+	Lens & Ultra-wide angle & Standard angle \\
+	\hline
+	Frame rate & 30 FPS & 15 FPS \\
+\hline
+\end{tabular} 
+
+\subsection{Results}
+
+Data and results from the Guam01 survey are available in a public GitHub repository \cite{mooreGitHubRepositoryGuamCRBdamagemap2020102020}. An interactive web map is available on GitHub pages (Fig. \ref{fig:guam01webmap}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/Guam01_webmap}
+	\caption{Screen shot of an interactive web map of results from the Guam01 roadside video survey of CRB damage on Guam (\cite{mooreWebMapGuamCRBdamagemap2020102020}) URL: \url{https://aubreymoore.github.io/Guam-CRB-damage-map-2020-10}.}
+	\label{fig:guam01webmap}
+\end{figure}
+
+
+\section{Extra}
+
+\cite{aubreymooreSetAutomatedRoadside2020}
+
+\cite{onepanelinc.AIPipelineOperations2020}
+
+\cite{onepanelinc.ScopeWorkObject2020}
 
 \printbibliography	
 

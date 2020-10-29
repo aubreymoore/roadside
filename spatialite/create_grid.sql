@@ -1,5 +1,7 @@
 BEGIN;
 
+DROP TABLE IF EXISTS mean_damage_index;
+
 CREATE TABLE grid (id INTEGER PRIMARY KEY AUTOINCREMENT);
 
 SELECT AddGeometryColumn('grid', 'geometry', 3857, 'MULTIPOLYGON', 'XY');

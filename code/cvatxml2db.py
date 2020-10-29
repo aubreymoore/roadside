@@ -1,5 +1,10 @@
 """
 
+Enters object detector results from CVAT XML files into the survey database.
+Data are inserted into the trees and vcuts tables.
+
+The CVAT XML files contain data which looks like this:
+
   <image id="3280" name="frame_003280" width="1920" height="1080">
     <box label="zero" occluded="0" xtl="474.00" ytl="836.00" xbr="636.00" ybr="1070.00">
     </box>
@@ -14,7 +19,6 @@
     <polygon label="cut" occluded="0" points="805.00,762.50;796.00,762.50;792.50,754.00;804.00,736.50;813.00,734.50;814.50,747.00;805.00,762.50">
     </polygon>
   </image>
-
 
 """
 
