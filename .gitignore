@@ -11,4 +11,7 @@
 secrets.py
 __pycache__
 jupyter-notebooks/cvat_xml_to_mysql/mysecrets.py
+code/venv
+code/.idea
+
 
