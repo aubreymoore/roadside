@@ -155,7 +155,7 @@ Although \textbf{Open Camera} has an option to georeference video frames, this f
 
 \section{Data processing}
 
-Data processing is controled by a python script, process-data.py (Listing \ref{lst:process-data.py}).
+Data processing is controlled by a python script, process-data.py (Listing \ref{lst:process-data.py}).
 
 \lstinputlisting[
 language=python,
@@ -224,22 +224,28 @@ QGIS 3.16 was used to visualize survey results on a map.
 \end{itemize}
 
 \lstinputlisting[
-language=Python,
-caption={create\_crb\_damage\_map.py},
-label={lst:create-crb-damage-map.py}
-]{../../spatialite/make_crb_damage_map.py}
+language=python,
+caption={make-crb-damage-map.py},
+label={lst:make-crb-damage-map.py}
+]{../../code/make-crb-damage-map.py}
+
+\lstinputlisting[
+language=python,
+caption={edit-webmap.py},
+label={lst:edit-webmap-data.py}
+]{../../code/edit-webmap.py}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{images/qgis2web1.png}
-	\caption{\textbf{ggis2web} parameters - 1.}
+	\caption{\textbf{qgis2web} parameters Screenshot 1.}
 	\label{fig:qgis2web1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{images/qgis2web2.png}
-	\caption{\textbf{ggis2web} parameters - 2.}
+	\caption{\textbf{qgis2web} parameters. Screenshot 2.}
 	\label{fig:qgis2web2}
 \end{figure}
 
@@ -268,8 +274,8 @@ Data and results from the Guam01 survey are available in a public GitHub reposit
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{images/Guam01_webmap}
-	\caption{Screen shot of an interactive web map of results from the Guam01 roadside video survey of CRB damage on Guam (\cite{mooreWebMapGuamCRBdamagemap2020102020}) URL: \url{https://aubreymoore.github.io/Guam-CRB-damage-map-2020-10}.}
+	\includegraphics[width=\linewidth]{images/Guam01-webmap}
+	\caption{Screenshot of an interactive web map of results from the Guam01 roadside video survey of CRB damage on Guam (\cite{mooreWebMapGuamCRBdamagemap2020102020}) URL: \url{https://aubreymoore.github.io/Guam-CRB-damage-map-2020-10}.}
 	\label{fig:guam01webmap}
 \end{figure}
 

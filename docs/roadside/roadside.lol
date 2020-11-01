@@ -7,4 +7,6 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {lstlisting}{\numberline {4}create\_grid.sql}{15}{lstlisting.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {lstlisting}{\numberline {5}create\_crb\_damage\_map.py}{16}{lstlisting.5}
+\contentsline {lstlisting}{\numberline {5}make-crb-damage-map.py}{16}{lstlisting.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {lstlisting}{\numberline {6}edit-webmap.py}{18}{lstlisting.6}
