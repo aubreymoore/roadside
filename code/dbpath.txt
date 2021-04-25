@@ -1,1 +1,1 @@
-/home/aubrey/Desktop/Guam01/Guam01.db
+/home/aubrey/Desktop/CRB-Damage-Survey-Validation/Guam01.db
