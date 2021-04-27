@@ -229,11 +229,11 @@ caption={make-crb-damage-map.py},
 label={lst:make-crb-damage-map.py}
 ]{../../code/make-crb-damage-map.py}
 
-\lstinputlisting[
-language=python,
-caption={edit-webmap.py},
-label={lst:edit-webmap-data.py}
-]{../../code/edit-webmap.py}
+%\lstinputlisting[
+%language=python,
+%caption={edit-webmap.py},
+%label={lst:edit-webmap-data.py}
+%]{../../code/edit-webmap.py}
 
 \begin{figure}[H]
 	\centering
@@ -287,6 +287,30 @@ Data and results from the Guam01 survey are available in a public GitHub reposit
 \cite{onepanelinc.AIPipelineOperations2020}
 
 \cite{onepanelinc.ScopeWorkObject2020}
+
+\newpage
+\section{Test Data}
+
+The following creates a 30 second video clip starting at 10 minutes and 30 seconds after the start of the video.
+Start time = 10:46:54 + 00:10:30 = 10:57:24.
+
+\begin{verbatim}
+mv 20210304_104654.mp4 20210304_104654_original.mp4
+ffmpeg \
+    -ss 00:10:30 \
+    -i 20210304_104654_original.mp4 \
+    -ss 00:00:30 \
+    -t 00:00:30 \
+    -c copy \
+    20210304_104654.mp4
+\end{verbatim}
+
+Unfortunately, timestamps in the resulting file are not set, so we have to edit using:
+
+\begin{verbatim}
+exiftool "-CreateDate=2021:03:04 10:57:24" 20210304_101635.mp4
+\end{verbatim}
+
 
 \printbibliography	
 
